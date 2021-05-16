@@ -21,7 +21,7 @@ ccflags-y += -nostdlib -Wl,-soname=linux-vdso.so.1 \
 
 # Force -O2 to avoid libgcc dependencies
 CFLAGS_REMOVE_vgettimeofday.o = -pg -Os
-CFLAGS_vgettimeofday.o = -O2 -fPIC
+CFLAGS_vgettimeofday.o = -O3 -fPIC
 CFLAGS_vgettimeofday.o += -mcmodel=tiny
 
 # Disable gcov profiling for VDSO code
