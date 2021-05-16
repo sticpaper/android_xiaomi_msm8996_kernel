@@ -36,6 +36,7 @@
 modules.builtin
 Module.symvers
 *.dwo
+*.zip
 
 #
 # Top-level generic files
@@ -76,6 +77,19 @@ series
 # cscope files
 cscope.*
 ncscope.*
+
+# kernel-out-files
+out
+
+# kernel-scripts
+phone_build.sh
+server_build.sh
+
+# kernel-compiler
+toolchain
+
+# kernel-autotest
+stic-paper-tools
 
 # gnu global files
 GPATH
