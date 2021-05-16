@@ -1,0 +1,11 @@
+###### Stic-Builder-Jenkins ######
+devices = capricorn
+defconfig = capricorn_defconfig
+host = Tianjin-stic-server-open-host (builder@stic-server-sq183)
+toolchain = /home/work/xiaomi-build/toolchain
+clang = <toolchain>/clang/clang-9.0.3/bin/clang
+gcc = <toolchain>/google-gcc-aarch64/bin
+gcc_arm32 = <toolchain>/google-gcc-arm32/bin
+aarch64_gcc = <gcc>/aarch64-linux-androidkernel-
+arm32_gcc = <gcc>/arm-linux-androidkernel-
+###### Stic-Builder-Jenkins ######
