@@ -1,7 +1,10 @@
 /*
  * drivers/thermal/msm_thermal_simple.c
  *
- * Copyright (C) 2014-2017, Sultanxda <sultanxda@gmail.com>
+ * Copyright (C) 2014-2016, Sultanxda <sultanxda@gmail.com>
+ *
+ * Originally based off the MSM8x60 thermal implementation by:
+ * Copyright (c) 2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -20,6 +23,7 @@
 #include <linux/cpufreq.h>
 #include <linux/err.h>
 #include <linux/kernel.h>
+#include <linux/module.h>
 #include <linux/of.h>
 #include <linux/platform_device.h>
 #include <linux/qpnp/qpnp-adc.h>
@@ -210,12 +214,9 @@ static void update_online_cpu_policy(void)
 static uint32_t get_thermal_zone_number(const char *filename)
 {
 	uint32_t num;
-	int ret;
 
-	/* Thermal zone sysfs nodes are named as "zone##" */
-	ret = sscanf(filename, "zone%u", &num);
-	if (ret != 1)
-		return 0;
+	/* Thermal zone sysfs nodes are named as "zone#" */
+	sscanf(filename, "zone%u", &num);
 
 	return num;
 }
@@ -224,8 +225,7 @@ static uint32_t get_valid_cpufreq(uint32_t cpu, uint32_t freq)
 {
 	struct cpufreq_frequency_table *table;
 	struct cpufreq_policy policy;
-	uint32_t index;
-	int32_t ret;
+	uint32_t index, ret;
 
 	ret = cpufreq_get_policy(&policy, cpu);
 	if (ret)
@@ -248,8 +248,8 @@ static ssize_t enabled_write(struct device *dev,
 	uint32_t data;
 	int ret;
 
-	ret = kstrtou32(buf, 10, &data);
-	if (ret)
+	ret = sscanf(buf, "%u", &data);
+	if (ret != 1)
 		return -EINVAL;
 
 	t->conf.enabled = data;
@@ -277,8 +277,8 @@ static ssize_t sampling_ms_write(struct device *dev,
 	uint32_t data;
 	int ret;
 
-	ret = kstrtou32(buf, 10, &data);
-	if (ret)
+	ret = sscanf(buf, "%u", &data);
+	if (ret != 1)
 		return -EINVAL;
 
 	spin_lock(&t->lock);
@@ -454,8 +454,10 @@ static struct thermal_policy *alloc_thermal_policy(void)
 	struct thermal_policy *t;
 
 	t = kzalloc(sizeof(*t), GFP_KERNEL);
-	if (!t)
+	if (!t) {
+		pr_err("Failed to allocate thermal policy\n");
 		return NULL;
+	}
 
 	t->wq = alloc_workqueue("msm_thermal_wq", WQ_HIGHPRI, 0);
 	if (!t->wq) {
@@ -476,10 +478,8 @@ static int msm_thermal_probe(struct platform_device *pdev)
 	int ret;
 
 	t = alloc_thermal_policy();
-	if (!t) {
-		pr_err("Failed to allocate thermal policy\n");
+	if (!t)
 		return -ENOMEM;
-	}
 
 	ret = msm_thermal_parse_dt(pdev, t);
 	if (ret)
@@ -510,7 +510,7 @@ free_mem:
 	return ret;
 }
 
-static const struct of_device_id msm_thermal_match_table[] = {
+static struct of_device_id msm_thermal_match_table[] = {
 	{.compatible = "qcom,msm-thermal-simple"},
 	{ },
 };
