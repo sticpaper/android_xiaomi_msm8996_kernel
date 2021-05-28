@@ -352,7 +352,7 @@ bool captouch_get_status(void)
 {
 	/*TODO: check SSC FD when resume*/
 
-	dev_info(g_drvdata->dev, "%s: homekey_enabled = %s\n",
+	dev_dbg(g_drvdata->dev, "%s: homekey_enabled = %s\n",
 		__func__, g_drvdata->homekey_enabled ? "true":"false");
 
 	return g_drvdata->homekey_enabled;
@@ -369,7 +369,7 @@ void captouch_key_report(int key_status)
 	else
 		g_drvdata->event = CAPTOUCH_TYPE_NONE;
 
-	dev_info(g_drvdata->dev, "%s: key_status = %d (1:down 0:up)\n", __func__, key_status);
+	dev_dbg(g_drvdata->dev, "%s: key_status = %d (1:down 0:up)\n", __func__, key_status);
 
 	wake_up_interruptible(&g_drvdata->eventq);
 }
