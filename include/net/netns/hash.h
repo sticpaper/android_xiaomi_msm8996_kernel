@@ -1,12 +1,11 @@
 #ifndef __NET_NS_HASH_H__
 #define __NET_NS_HASH_H__
 
-#include <asm/cache.h>
-
-struct net;
+#include <net/net_namespace.h>
 
 static inline u32 net_hash_mix(const struct net *net)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_NET_NS
 	/*
 	 * shift this right to eliminate bits, that are
@@ -17,5 +16,8 @@ static inline u32 net_hash_mix(const struct net *net)
 #else
 	return 0;
 #endif
+=======
+	return net->hash_mix;
+>>>>>>> f7f82895a3f0842ab8feb8b060b5110c60ff0ff2
 }
 #endif

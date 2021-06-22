@@ -5,9 +5,15 @@
 /*
  * Common definitions for all gcc versions go here.
  */
+<<<<<<< HEAD
 #define GCC_VERSION (__GNUC__ * 10000		\
 		     + __GNUC_MINOR__ * 100	\
 		     + __GNUC_PATCHLEVEL__)
+=======
+#define GCC_VERSION (__GNUC__ * 10000 \
+		   + __GNUC_MINOR__ * 100 \
+		   + __GNUC_PATCHLEVEL__)
+>>>>>>> f7f82895a3f0842ab8feb8b060b5110c60ff0ff2
 
 /* Optimization barrier */
 

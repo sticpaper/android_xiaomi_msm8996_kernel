@@ -135,3 +135,8 @@ struct acm {
 #define IGNORE_DEVICE			BIT(5)
 #define QUIRK_CONTROL_LINE_STATE	BIT(6)
 #define CLEAR_HALT_CONDITIONS		BIT(7)
+<<<<<<< HEAD
+=======
+#define SEND_ZERO_PACKET		BIT(8)
+#define DISABLE_ECHO			BIT(9)
+>>>>>>> f7f82895a3f0842ab8feb8b060b5110c60ff0ff2
