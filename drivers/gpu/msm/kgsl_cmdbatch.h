@@ -45,7 +45,6 @@
  * for easy access
  * @profile_index: Index to store the start/stop ticks in the kernel profiling
  * buffer
- * @submit_ticks: Variable to hold ticks at the time of cmdbatch submit.
  * @global_ts: The ringbuffer timestamp corresponding to this cmdbatch
  * @timeout_jiffies: For a syncpoint cmdbatch the jiffies at which the
  * timer will expire
@@ -71,7 +70,6 @@ struct kgsl_cmdbatch {
 	struct kgsl_mem_entry *profiling_buf_entry;
 	uint64_t profiling_buffer_gpuaddr;
 	unsigned int profile_index;
-	uint64_t submit_ticks;
 	unsigned int global_ts;
 	unsigned long timeout_jiffies;
 };

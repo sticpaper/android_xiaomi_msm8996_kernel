@@ -561,12 +561,8 @@ static int sendcmd(struct adreno_device *adreno_dev,
 	struct kgsl_device *device = KGSL_DEVICE(adreno_dev);
 	struct adreno_gpudev *gpudev = ADRENO_GPU_DEVICE(adreno_dev);
 	struct adreno_dispatcher *dispatcher = &adreno_dev->dispatcher;
-	struct adreno_context *drawctxt = ADRENO_CONTEXT(cmdbatch->context);
 	struct adreno_dispatcher_cmdqueue *dispatch_q =
 				ADRENO_CMDBATCH_DISPATCH_CMDQUEUE(cmdbatch);
-	struct adreno_submit_time time;
-	uint64_t secs = 0;
-	unsigned long nsecs = 0;
 	int ret;
 
 	mutex_lock(&device->mutex);
@@ -600,7 +596,7 @@ static int sendcmd(struct adreno_device *adreno_dev,
 			ADRENO_CMDBATCH_PROFILE_COUNT;
 	}
 
-	ret = adreno_ringbuffer_submitcmd(adreno_dev, cmdbatch, &time);
+	ret = adreno_ringbuffer_submitcmd(adreno_dev, cmdbatch, NULL);
 
 	/*
 	 * On the first command, if the submission was successful, then read the
@@ -650,16 +646,7 @@ static int sendcmd(struct adreno_device *adreno_dev,
 		return ret;
 	}
 
-	secs = time.ktime;
-	nsecs = do_div(secs, 1000000000);
-
-	trace_adreno_cmdbatch_submitted(cmdbatch, (int) dispatcher->inflight,
-		time.ticks, (unsigned long) secs, nsecs / 1000, drawctxt->rb,
-		adreno_get_rptr(drawctxt->rb));
-
 	mutex_unlock(&device->mutex);
-
-	cmdbatch->submit_ticks = time.ticks;
 
 	dispatch_q->cmd_q[dispatch_q->tail] = cmdbatch;
 	dispatch_q->tail = (dispatch_q->tail + 1) %
@@ -2004,12 +1991,6 @@ static void retire_cmdbatch(struct adreno_device *adreno_dev,
 				(int) dispatcher->inflight, start, end,
 				ADRENO_CMDBATCH_RB(cmdbatch),
 				adreno_get_rptr(drawctxt->rb));
-
-	drawctxt->submit_retire_ticks[drawctxt->ticks_index] =
-		end - cmdbatch->submit_ticks;
-
-	drawctxt->ticks_index = (drawctxt->ticks_index + 1) %
-		SUBMIT_RETIRE_TICKS_SIZE;
 
 	kgsl_cmdbatch_destroy(cmdbatch);
 }
