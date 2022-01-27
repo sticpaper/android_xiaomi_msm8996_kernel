@@ -13,7 +13,7 @@
 #include <linux/kthread.h>
 #include <linux/delay.h>
 #include <linux/freezer.h>
-#include <linux/sched/signal.h>
+#include <linux/sched.h>
 #include <linux/fb.h>
 #include <linux/pm_wakeup.h>
 #include <linux/power_supply.h>
